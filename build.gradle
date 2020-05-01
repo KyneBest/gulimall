@@ -1,0 +1,98 @@
+buildscript {
+    repositories {
+//        mavenCentral()
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+    ext {
+        dependencyManagementPluginVersion = '1.0.9.RELEASE'
+        springBootVersion = '2.2.6.RELEASE'
+        springCloudVersion = 'Hoxton.SR4'
+        junitJupiterVersion = '5.6.2'
+//        okHttpVersion = '4.1.0'
+//        jspApiVersion = '2.3.3'
+//        fastJsonVersion = '1.2.59'
+//        mybatisVersion='3.5.2'
+//        mysqlVersion='8.0.17'
+//        druidVersion='1.1.18'
+//        springSecurityJwtVersion = '1.0.10.RELEASE'
+//        zip4jVersion = '1.3.2'
+    }
+    dependencies {
+        classpath("io.spring.gradle:dependency-management-plugin:${dependencyManagementPluginVersion}")
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+allprojects {
+    group = 'com.vieruodis'
+    version = '1.0-SNAPSHOT'
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+}
+
+subprojects {
+
+    // JVM 版本号要求
+    sourceCompatibility = '14'
+    targetCompatibility = '14'
+    // java编译的时候缺省状态下会因为中文字符而失败
+    [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    }
+
+    //定义版本号
+//    ext {
+//        springVersion = '4.3.3.RELEASE'
+//    }
+//    ext['junit-jupiter.version'] = '5.5.1'
+//    ext['commons-lang3.version'] = '3.9'
+//    ext['elasticsearch.version'] = '7.3.1'
+//    ext['commons-codec.version'] = '1.13'
+//    ext['hibernate.version'] = '5.4.4.Final'
+
+    configurations {
+        // 所有需要忽略的包定义在此
+//        all*.exclude group: 'commons-httpclient'
+//        all*.exclude group: 'commons-logging'
+//        all*.exclude group: 'commons-beanutils', module: 'commons-beanutils'
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+    dependencies {
+        //官方推荐用法 https://projectlombok.org/setup/gradle 这里使用spring boot 里面规定的版本，所以省略
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+
+        //JUnit 5
+//        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+//            exclude group: 'junit', module: 'junit'
+//        }
+        //因为指定了 ${junitJupiterVersion} 所以要使用 “”
+//        testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+    jar {
+        enabled = true
+    }
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+        }
+    }
+}

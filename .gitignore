@@ -12,3 +12,19 @@ gradle-app.setting
 
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
+*.sw?
+.#*
+*#
+*~
+.classpath
+.project
+.settings
+bin
+build
+target
+dependency-reduced-pom.xml
+*.sublime-*
+/scratch
+README.html
+.idea
+*.iml

@@ -1,0 +1,6 @@
+include 'gulimall-product'
+include 'gulimall-coupon'
+include 'gulimall-member'
+include 'gulimall-order'
+include 'gulimall-ware'
+
